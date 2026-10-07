@@ -47,14 +47,7 @@ class OwerriScene extends Phaser.Scene {
   create() {
     this.cameras.main.setBackgroundColor("#8fc27d");
 
-    // Ground
-    this.add.rectangle(
-      700,
-      550,
-      1400,
-      1100,
-      0x8fc27d
-    );
+    this.add.rectangle(700, 550, 1400, 1100, 0x8fc27d);
 
     this.createDistricts();
     this.createRoads();
@@ -62,48 +55,20 @@ class OwerriScene extends Phaser.Scene {
     this.createTrees();
     this.createLandmarks();
     this.createLocations();
+    this.createTraffic();
+    this.createPedestrians();
     this.createPlayer();
 
-    this.cameras.main.setBounds(
-      0,
-      0,
-      1400,
-      1100
-    );
-
+    this.cameras.main.setBounds(0, 0, 1400, 1100);
     this.cameras.main.setZoom(0.72);
   }
 
   createDistricts() {
     const districts = [
-      {
-        x: 220,
-        y: 190,
-        w: 350,
-        h: 250,
-        color: 0xa8cf91,
-      },
-      {
-        x: 760,
-        y: 180,
-        w: 420,
-        h: 260,
-        color: 0xb4d59b,
-      },
-      {
-        x: 220,
-        y: 720,
-        w: 400,
-        h: 300,
-        color: 0xa3ca8b,
-      },
-      {
-        x: 900,
-        y: 760,
-        w: 480,
-        h: 300,
-        color: 0xb0d398,
-      },
+      { x: 220, y: 190, w: 350, h: 250, color: 0xa8cf91 },
+      { x: 760, y: 180, w: 420, h: 260, color: 0xb4d59b },
+      { x: 220, y: 720, w: 400, h: 300, color: 0xa3ca8b },
+      { x: 900, y: 760, w: 480, h: 300, color: 0xb0d398 },
     ];
 
     districts.forEach((district) => {
@@ -115,34 +80,14 @@ class OwerriScene extends Phaser.Scene {
         district.color
       );
 
-      area.setStrokeStyle(
-        2,
-        0x7fa96e,
-        0.45
-      );
+      area.setStrokeStyle(2, 0x7fa96e, 0.45);
     });
   }
 
   createRoads() {
-    // Main east-west road
-    this.add.rectangle(
-      700,
-      550,
-      1400,
-      86,
-      0x4f555b
-    );
+    this.add.rectangle(700, 550, 1400, 86, 0x4f555b);
+    this.add.rectangle(700, 550, 86, 1100, 0x4f555b);
 
-    // Main north-south road
-    this.add.rectangle(
-      700,
-      550,
-      86,
-      1100,
-      0x4f555b
-    );
-
-    // Secondary roads
     const roads = [
       [700, 270, 1300, 34],
       [700, 820, 1300, 34],
@@ -155,53 +100,20 @@ class OwerriScene extends Phaser.Scene {
     ];
 
     roads.forEach(([x, y, width, height]) => {
-      this.add.rectangle(
-        x,
-        y,
-        width,
-        height,
-        0x6b7075
-      );
+      this.add.rectangle(x, y, width, height, 0x6b7075);
     });
 
-    // Road centre markings
     for (let x = 20; x < 1380; x += 70) {
-      this.add.rectangle(
-        x,
-        550,
-        34,
-        5,
-        0xf2d15b
-      );
+      this.add.rectangle(x, 550, 34, 5, 0xf2d15b);
     }
 
     for (let y = 20; y < 1080; y += 70) {
-      this.add.rectangle(
-        700,
-        y,
-        5,
-        34,
-        0xf2d15b
-      );
+      this.add.rectangle(700, y, 5, 34, 0xf2d15b);
     }
 
-    // Smaller lane markings
     for (let x = 30; x < 1370; x += 80) {
-      this.add.rectangle(
-        x,
-        270,
-        32,
-        3,
-        0xd8dde0
-      );
-
-      this.add.rectangle(
-        x,
-        820,
-        32,
-        3,
-        0xd8dde0
-      );
+      this.add.rectangle(x, 270, 32, 3, 0xd8dde0);
+      this.add.rectangle(x, 820, 32, 3, 0xd8dde0);
     }
   }
 
@@ -211,26 +123,21 @@ class OwerriScene extends Phaser.Scene {
       [230, 150, 80, 60],
       [430, 150, 70, 55],
       [530, 180, 90, 60],
-
       [850, 150, 80, 60],
       [970, 150, 75, 55],
       [1100, 180, 90, 65],
       [1220, 150, 70, 55],
-
       [100, 470, 75, 55],
       [210, 470, 80, 60],
       [430, 450, 75, 55],
       [520, 450, 80, 60],
-
       [850, 470, 80, 55],
       [960, 470, 75, 60],
       [1140, 450, 90, 60],
       [1250, 470, 75, 55],
-
       [100, 780, 75, 55],
       [240, 800, 85, 60],
       [430, 850, 75, 55],
-
       [760, 900, 80, 60],
       [900, 900, 90, 60],
       [1050, 900, 80, 55],
@@ -246,10 +153,7 @@ class OwerriScene extends Phaser.Scene {
         0xd9c7a5
       );
 
-      building.setStrokeStyle(
-        3,
-        0x927d62
-      );
+      building.setStrokeStyle(3, 0x927d62);
 
       this.add.rectangle(
         x,
@@ -312,61 +216,37 @@ class OwerriScene extends Phaser.Scene {
 
   createLandmarks() {
     const landmarks = [
-      {
-        name: "HOSPITAL",
-        x: 250,
-        y: 700,
-        color: 0xe85b5b,
-      },
-      {
-        name: "POLICE",
-        x: 420,
-        y: 680,
-        color: 0x4169a1,
-      },
-      {
-        name: "MALL",
-        x: 1120,
-        y: 560,
-        color: 0xa45cc5,
-      },
-      {
-        name: "MARKET",
-        x: 560,
-        y: 560,
-        color: 0xd99b32,
-      },
-      {
-        name: "PARK",
-        x: 760,
-        y: 760,
-        color: 0x4d9a58,
-      },
+      { name: "HOSPITAL", x: 250, y: 700, color: 0xe85b5b },
+      { name: "POLICE", x: 420, y: 680, color: 0x4169a1 },
+      { name: "MALL", x: 1120, y: 560, color: 0xa45cc5 },
+      { name: "MARKET", x: 560, y: 560, color: 0xd99b32 },
+      { name: "PARK", x: 760, y: 760, color: 0x4d9a58 },
     ];
 
     landmarks.forEach((landmark) => {
-      this.add.rectangle(
-        landmark.x,
-        landmark.y,
-        58,
-        45,
-        landmark.color
-      ).setStrokeStyle(
-        3,
-        0xffffff
-      );
+      this.add
+        .rectangle(
+          landmark.x,
+          landmark.y,
+          58,
+          45,
+          landmark.color
+        )
+        .setStrokeStyle(3, 0xffffff);
 
-      this.add.text(
-        landmark.x,
-        landmark.y,
-        landmark.name,
-        {
-          fontFamily: "Arial",
-          fontSize: "9px",
-          color: "#ffffff",
-          fontStyle: "bold",
-        }
-      ).setOrigin(0.5);
+      this.add
+        .text(
+          landmark.x,
+          landmark.y,
+          landmark.name,
+          {
+            fontFamily: "Arial",
+            fontSize: "9px",
+            color: "#ffffff",
+            fontStyle: "bold",
+          }
+        )
+        .setOrigin(0.5);
     });
   }
 
@@ -390,15 +270,10 @@ class OwerriScene extends Phaser.Scene {
         0,
         0,
         27,
-        this.getLocationColor(
-          location.type
-        )
+        this.getLocationColor(location.type)
       );
 
-      marker.setStrokeStyle(
-        4,
-        0xffffff
-      );
+      marker.setStrokeStyle(4, 0xffffff);
 
       const label = this.add.text(
         0,
@@ -420,16 +295,9 @@ class OwerriScene extends Phaser.Scene {
 
       label.setOrigin(0.5);
 
-      container.add([
-        shadow,
-        marker,
-        label,
-      ]);
-
+      container.add([shadow, marker, label]);
       container.setSize(90, 90);
-      container.setInteractive({
-        useHandCursor: true,
-      });
+      container.setInteractive({ useHandCursor: true });
 
       container.on("pointerover", () => {
         marker.setScale(1.15);
@@ -441,6 +309,156 @@ class OwerriScene extends Phaser.Scene {
 
       container.on("pointerdown", () => {
         this.props.onTravel(location);
+      });
+    });
+  }
+
+  createTraffic() {
+    const taxis = [
+      { x: 100, y: 550, color: 0xf4c542 },
+      { x: 650, y: 550, color: 0xf4c542 },
+      { x: 1150, y: 550, color: 0xf4c542 },
+    ];
+
+    taxis.forEach((taxi, index) => {
+      const car = this.add.container(taxi.x, taxi.y - 18);
+
+      const body = this.add.rectangle(
+        0,
+        0,
+        52,
+        25,
+        taxi.color
+      );
+
+      body.setStrokeStyle(2, 0x333333);
+
+      const window = this.add.rectangle(
+        5,
+        -3,
+        22,
+        10,
+        0x9bd1e8
+      );
+
+      const wheel1 = this.add.circle(
+        -17,
+        13,
+        6,
+        0x222222
+      );
+
+      const wheel2 = this.add.circle(
+        17,
+        13,
+        6,
+        0x222222
+      );
+
+      car.add([body, window, wheel1, wheel2]);
+      car.setDepth(12);
+
+      this.tweens.add({
+        targets: car,
+        x: 1450,
+        duration: 9000 + index * 1800,
+        repeat: -1,
+        onRepeat: () => {
+          car.x = -100;
+        },
+      });
+    });
+
+    const buses = [
+      { x: 200, y: 820 },
+      { x: 950, y: 270 },
+    ];
+
+    buses.forEach((bus, index) => {
+      const vehicle = this.add.container(bus.x, bus.y - 25);
+
+      const body = this.add.rectangle(
+        0,
+        0,
+        75,
+        32,
+        0x2f6fed
+      );
+
+      body.setStrokeStyle(2, 0xffffff);
+
+      const window1 = this.add.rectangle(
+        -18,
+        -3,
+        16,
+        12,
+        0x9bd1e8
+      );
+
+      const window2 = this.add.rectangle(
+        5,
+        -3,
+        16,
+        12,
+        0x9bd1e8
+      );
+
+      vehicle.add([body, window1, window2]);
+      vehicle.setDepth(11);
+
+      this.tweens.add({
+        targets: vehicle,
+        x: -100,
+        duration: 11000 + index * 2000,
+        repeat: -1,
+        onRepeat: () => {
+          vehicle.x = 1500;
+        },
+      });
+    });
+  }
+
+  createPedestrians() {
+    const people = [
+      [280, 320],
+      [460, 350],
+      [700, 310],
+      [930, 330],
+      [1180, 350],
+      [350, 740],
+      [620, 740],
+      [880, 740],
+      [1080, 700],
+      [1250, 740],
+    ];
+
+    people.forEach(([x, y], index) => {
+      const person = this.add.container(x, y);
+
+      const body = this.add.circle(
+        0,
+        0,
+        7,
+        index % 2 === 0 ? 0x2563eb : 0xdc2626
+      );
+
+      const head = this.add.circle(
+        0,
+        -10,
+        5,
+        0xf1c27d
+      );
+
+      person.add([body, head]);
+      person.setDepth(14);
+
+      this.tweens.add({
+        targets: person,
+        x: x + 80,
+        duration: 3500 + index * 300,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut",
       });
     });
   }
@@ -472,17 +490,13 @@ class OwerriScene extends Phaser.Scene {
 
   createPlayer() {
     const current = locations.find(
-      (location) =>
-        location.name === this.props.currentPlace
+      (location) => location.name === this.props.currentPlace
     );
 
     const x = current?.x ?? 350;
     const y = current?.y ?? 220;
 
-    this.player = this.add.container(
-      x,
-      y - 55
-    );
+    this.player = this.add.container(x, y - 55);
 
     const shadow = this.add.ellipse(
       0,
@@ -500,10 +514,7 @@ class OwerriScene extends Phaser.Scene {
       0xf97316
     );
 
-    body.setStrokeStyle(
-      4,
-      0xffffff
-    );
+    body.setStrokeStyle(4, 0xffffff);
 
     const head = this.add.circle(
       0,
@@ -512,19 +523,11 @@ class OwerriScene extends Phaser.Scene {
       0xf1c27d
     );
 
-    this.player.add([
-      shadow,
-      body,
-      head,
-    ]);
-
+    this.player.add([shadow, body, head]);
     this.player.setDepth(20);
 
-    this.add.text(
-      0,
-      -58,
-      "YOU",
-      {
+    this.add
+      .text(0, -58, "YOU", {
         fontFamily: "Arial",
         fontSize: "14px",
         color: "#ffffff",
@@ -535,16 +538,14 @@ class OwerriScene extends Phaser.Scene {
           top: 3,
           bottom: 3,
         },
-      }
-    )
+      })
       .setOrigin(0.5)
       .setDepth(21);
   }
 
   movePlayer(place: string) {
     const target = locations.find(
-      (location) =>
-        location.name === place
+      (location) => location.name === place
     );
 
     if (!target || !this.player) return;
@@ -571,41 +572,30 @@ export default function OwerriMap({
   energy,
   onTravel,
 }: Props) {
-  const gameRef =
-    useRef<HTMLDivElement>(null);
-
-  const gameInstance =
-    useRef<Phaser.Game | null>(null);
+  const gameRef = useRef<HTMLDivElement>(null);
+  const gameInstance = useRef<Phaser.Game | null>(null);
 
   useEffect(() => {
     if (!gameRef.current) return;
 
     const realGame = new Phaser.Game({
       type: Phaser.AUTO,
-
       parent: gameRef.current,
-
       width: 1000,
       height: 650,
-
       backgroundColor: "#8fc27d",
-
       scale: {
         mode: Phaser.Scale.RESIZE,
         autoCenter: Phaser.Scale.CENTER_BOTH,
       },
-
       scene: OwerriScene,
     });
 
-    realGame.scene.start(
-      "OwerriScene",
-      {
-        currentPlace,
-        energy,
-        onTravel,
-      }
-    );
+    realGame.scene.start("OwerriScene", {
+      currentPlace,
+      energy,
+      onTravel,
+    });
 
     gameInstance.current = realGame;
 
