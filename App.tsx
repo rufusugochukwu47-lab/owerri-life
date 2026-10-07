@@ -8,13 +8,13 @@ type Location = {
   type: string;
 };
 
-const jobs: Record<string, [string, number, number]> = {
-  "Gadget Sales Rep": ["📱", 18000, 28],
-  "Market Trader": ["🛒", 14000, 22],
-  "Office Assistant": ["💼", 16000, 25],
-  "Restaurant Staff": ["🍽️", 13000, 20],
-  "Transport Driver": ["🚕", 19000, 32],
-};
+const jobs: [string, number, number][] = [
+  ["📱 Gadget Sales Rep", 18000, 28],
+  ["🛒 Market Trader", 14000, 22],
+  ["💼 Office Assistant", 16000, 25],
+  ["🍽️ Restaurant Staff", 13000, 20],
+  ["🚕 Transport Driver", 19000, 32],
+];
 
 export default function App() {
   const [money, setMoney] = useState(50000);
