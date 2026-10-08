@@ -757,7 +757,50 @@ const completeMission = () => {
               ))}
             </div>
           )}
+          <div className="card">
+            <small>🎯 MISSIONS</small>
 
+            {activeMission ? (
+              <>
+                <h2>{activeMission.title}</h2>
+
+                <p>{activeMission.description}</p>
+
+                <p>
+                  📍 Deliver to: <b>{activeMission.to}</b>
+                </p>
+
+                <p>
+                  💰 Reward: ₦{activeMission.reward.toLocaleString()}
+                </p>
+
+                <button
+                  className="primary"
+                  onClick={completeMission}
+                >
+                  🎯 Complete Mission
+                </button>
+              </>
+            ) : (
+              <>
+                <p>Choose a mission available in Owerri.</p>
+
+                {missions.map((mission) => (
+                  <button
+                    key={mission.title}
+                    onClick={() => startMission(mission)}
+                    style={{
+                      width: "100%",
+                      marginTop: "8px",
+                    }}
+                  >
+                    {mission.title} — ₦
+                    {mission.reward.toLocaleString()}
+                  </button>
+                ))}
+              </>
+            )}
+          </div>
           <div className="card">
             <small>CITY ACTIVITY</small>
 
