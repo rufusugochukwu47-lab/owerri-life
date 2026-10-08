@@ -777,29 +777,28 @@ const completeMission = () => {
           </div>
 
           <div className="card">
-            <small>YOUR CAREER</small>
+  <small>YOUR CAREER</small>
 
-            <select
-              value={job}
-              onChange={(event) =>
-                setJob(Number(event.target.value))
-              }
-            >
-              {jobs.map((item, index) => (
-                <option key={index} value={index}>
-                  {item[0]} — ₦
-                  {item[1].toLocaleString()}
-                </option>
-              ))}
-            </select>
+  <select
+    value={job}
+    onChange={(event) =>
+      setJob(Number(event.target.value))
+    }
+  >
+    {jobs.map((item, index) => (
+      <option key={index} value={index}>
+        {item[0]} — ₦{item[1].toLocaleString()}
+      </option>
+    ))}
+  </select>
 
-            <button
-              className="primary"
-              onClick={work}
-            >
-              💼 Work a Shift
-            </button>
-          </div>
+  <button
+    className="primary"
+    onClick={work}
+  >
+    💼 Work a Shift
+  </button>
+</div>
 
           <div className="actions">
             <button onClick={eat}>
