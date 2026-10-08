@@ -23,7 +23,57 @@ type CityEvent = {
   description: string;
   choices: EventChoice[];
 };
-
+type Mission = {
+  title: string;
+  description: string;
+  from: string;
+  to: string;
+  reward: number;
+  energy: number;
+  reputation: number;
+};
+const missions: Mission[] = [
+  {
+    title: "📦 Phone Delivery",
+    description:
+      "A customer bought a phone and needs it delivered across town.",
+    from: "Works Layout",
+    to: "New Owerri",
+    reward: 12000,
+    energy: 10,
+    reputation: 3,
+  },
+  {
+    title: "🍛 Food Delivery",
+    description:
+      "A restaurant needs an urgent food delivery.",
+    from: "Restaurant Row",
+    to: "Ikenegbu",
+    reward: 8000,
+    energy: 8,
+    reputation: 2,
+  },
+  {
+    title: "📄 Office Documents",
+    description:
+      "Important documents need to reach an office before the end of the day.",
+    from: "Banking Zone",
+    to: "Works Layout",
+    reward: 10000,
+    energy: 7,
+    reputation: 3,
+  },
+  {
+    title: "🛍️ Market Order",
+    description:
+      "A customer needs groceries picked up from the market.",
+    from: "Main Market",
+    to: "World Bank",
+    reward: 9000,
+    energy: 9,
+    reputation: 2,
+  },
+];
 const jobs: [string, number, number][] = [
   ["📱 Gadget Sales Rep", 18000, 28],
   ["🛒 Market Trader", 14000, 22],
@@ -130,7 +180,7 @@ const cityEvents: CityEvent[] = [
 
 const npcs = [
   {
-    name: "Chidi",
+    name: "ugochukwu",
     role: "Gadget Dealer",
     place: "Works Layout",
     message:
@@ -178,6 +228,11 @@ export default function App() {
   );
 
   const [eventNumber, setEventNumber] = useState(0);
+  const [activeMission, setActiveMission] =
+  useState<Mission | null>(null);
+
+const [missionStarted, setMissionStarted] =
+  useState(false);
 
   const add = (message: string) => {
     setLog((current) => [message, ...current].slice(0, 8));
@@ -311,7 +366,54 @@ export default function App() {
     setActiveEvent(null);
     setEventNumber((value) => value + 1);
   };
+const startMission = (mission: Mission) => {
+  if (place !== mission.from) {
+    add(
+      `📍 You need to be at ${mission.from} to start this mission.`
+    );
+    return;
+  }
 
+  if (energy < mission.energy) {
+    add("⚡ You don't have enough energy for this mission.");
+    return;
+  }
+
+  setActiveMission(mission);
+  setMissionStarted(true);
+
+  add(`🎯 Mission accepted: ${mission.title}`);
+};
+
+const completeMission = () => {
+  if (!activeMission) return;
+
+  if (place !== activeMission.to) {
+    add(
+      `📍 Travel to ${activeMission.to} to complete the mission.`
+    );
+    return;
+  }
+
+  setMoney((value) => value + activeMission.reward);
+
+  setEnergy((value) =>
+    Math.max(0, value - activeMission.energy)
+  );
+
+  setRep((value) =>
+    Math.min(100, value + activeMission.reputation)
+  );
+
+  setHunger((value) => Math.max(0, value - 5));
+
+  add(
+    `🎉 Mission completed! +₦${activeMission.reward.toLocaleString()}`
+  );
+
+  setActiveMission(null);
+  setMissionStarted(false);
+};
   const talkToNpc = (
     name: string,
     role: string,
@@ -617,6 +719,63 @@ export default function App() {
 
         <aside>
           <div className="card">
+  <small>🎯 MISSIONS</small>
+
+  {activeMission ? (
+    <>
+      <h2>{activeMission.title}</h2>
+
+      <p>{activeMission.description}</p>
+
+      <p>
+        📍 {activeMission.from} → {activeMission.to}
+      </p>
+
+      <p>
+        💰 Reward: ₦{activeMission.reward.toLocaleString()}
+      </p>
+
+      <p>⚡ Energy: {activeMission.energy}</p>
+
+      <p>⭐ Reputation: +{activeMission.reputation}</p>
+
+      <button
+        className="primary"
+        onClick={completeMission}
+      >
+        {place === activeMission.to
+          ? "🎉 Complete Mission"
+          : `🚶 Travel to ${activeMission.to}`}
+      </button>
+    </>
+  ) : (
+    missions.map((mission) => (
+      <div
+        key={mission.title}
+        style={{ marginTop: "10px" }}
+      >
+        <h3>{mission.title}</h3>
+
+        <p>{mission.description}</p>
+
+        <p>
+          📍 {mission.from} → {mission.to}
+        </p>
+
+        <p>
+          💰 ₦{mission.reward.toLocaleString()} • ⚡{" "}
+          {mission.energy} • ⭐ +{mission.reputation}
+        </p>
+
+        <button
+          onClick={() => startMission(mission)}
+        >
+          🎯 Accept Mission
+        </button>
+      </div>
+    ))
+  )}
+</div>
             <small>CURRENT LOCATION</small>
 
             <h2>{place}</h2>
