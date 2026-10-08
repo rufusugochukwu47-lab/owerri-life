@@ -732,64 +732,7 @@ const completeMission = () => {
               🚶 Travel costs <b>5 Energy</b>
             </p>
           </div>
-          <div className="card">
-            <small>🎯 MISSIONS</small>
-
-  {activeMission ? (
-    <>
-      <h2>{activeMission.title}</h2>
-
-      <p>{activeMission.description}</p>
-
-      <p>
-        📍 {activeMission.from} → {activeMission.to}
-      </p>
-
-      <p>
-        💰 Reward: ₦{activeMission.reward.toLocaleString()}
-      </p>
-
-      <p>⚡ Energy: {activeMission.energy}</p>
-
-      <p>⭐ Reputation: +{activeMission.reputation}</p>
-
-      <button
-        className="primary"
-        onClick={completeMission}
-      >
-        {place === activeMission.to
-          ? "🎉 Complete Mission"
-          : `🚶 Travel to ${activeMission.to}`}
-      </button>
-    </>
-  ) : (
-    missions.map((mission) => (
-      <div
-        key={mission.title}
-        style={{ marginTop: "10px" }}
-      >
-        <h3>{mission.title}</h3>
-
-        <p>{mission.description}</p>
-
-        <p>
-          📍 {mission.from} → {mission.to}
-        </p>
-
-        <p>
-          💰 ₦{mission.reward.toLocaleString()} • ⚡{" "}
-          {mission.energy} • ⭐ +{mission.reputation}
-        </p>
-
-        <button
-          onClick={() => startMission(mission)}
-        >
-          🎯 Accept Mission
-        </button>
-      </div>
-    ))
-  )}
-</div>
+     
           {nearbyNpcs.length > 0 && (
             <div className="card">
               <small>PEOPLE NEARBY</small>
