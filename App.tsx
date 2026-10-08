@@ -719,7 +719,21 @@ const completeMission = () => {
 
         <aside>
           <div className="card">
-  <small>🎯 MISSIONS</small>
+            <small>CURRENT LOCATION</small>
+
+            <h2>{place}</h2>
+
+            <p>
+              Explore the city, work, eat, socialize and build
+              your story.
+            </p>
+
+            <p>
+              🚶 Travel costs <b>5 Energy</b>
+            </p>
+          </div>
+          <div className="card">
+            <small>🎯 MISSIONS</small>
 
   {activeMission ? (
     <>
@@ -776,20 +790,6 @@ const completeMission = () => {
     ))
   )}
 </div>
-            <small>CURRENT LOCATION</small>
-
-            <h2>{place}</h2>
-
-            <p>
-              Explore the city, work, eat, socialize and build
-              your story.
-            </p>
-
-            <p>
-              🚶 Travel costs <b>5 Energy</b>
-            </p>
-          </div>
-
           {nearbyNpcs.length > 0 && (
             <div className="card">
               <small>PEOPLE NEARBY</small>
