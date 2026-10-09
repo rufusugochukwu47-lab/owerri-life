@@ -31,6 +31,7 @@ type Mission = {
   reward: number;
   energy: number;
   reputation: number;
+  timeLimit: number;
 };
 const missions: Mission[] = [
   {
@@ -41,7 +42,7 @@ const missions: Mission[] = [
     to: "New Owerri",
     reward: 12000,
     energy: 10,
-    reputation: 3,
+    reputation: 3, timeLimit: 3,
   },
   {
     title: "🍛 Food Delivery",
@@ -51,7 +52,7 @@ const missions: Mission[] = [
     to: "Ikenegbu",
     reward: 8000,
     energy: 8,
-    reputation: 2,
+    reputation: 2, timeLimit: 2,
   },
   {
     title: "📄 Office Documents",
@@ -61,7 +62,7 @@ const missions: Mission[] = [
     to: "Works Layout",
     reward: 10000,
     energy: 7,
-    reputation: 3,
+    reputation: 3, timeLimit: 2,
   },
   {
     title: "🛍️ Market Order",
@@ -71,7 +72,7 @@ const missions: Mission[] = [
     to: "World Bank",
     reward: 9000,
     energy: 9,
-    reputation: 2,
+    reputation: 2, timeLimit: 3,
   },
 ];
 const jobs: [string, number, number][] = [
@@ -233,6 +234,11 @@ export default function App() {
 
 const [missionStarted, setMissionStarted] =
   useState(false);
+  const [missionDeadline, setMissionDeadline] =
+  useState<number | null>(null);
+
+const [missionStartDay, setMissionStartDay] =
+  useState<number | null>(null);
 
   const add = (message: string) => {
     setLog((current) => [message, ...current].slice(0, 8));
@@ -319,23 +325,44 @@ const [missionStarted, setMissionStarted] =
     add("🧑🏽‍🤝‍🧑🏽 You linked up with friends.");
   };
 
-  const sleep = () => {
-    setDay((value) => value + 1);
-    setEnergy(100);
-    setHunger((value) => Math.max(0, value - 10));
-    setHappy((value) => Math.min(100, value + 5));
+  
+const sleep = () => {
+  const nextDay = day + 1;
 
-    add(`🌅 Good morning! Day ${day + 1} begins.`);
+  setDay(nextDay);
+  setEnergy(100);
+  setHunger((value) => Math.max(0, value - 10));
+  setHappy((value) => Math.min(100, value + 5));
 
-    if (Math.random() < 0.6) {
-      const event =
-        cityEvents[
-          Math.floor(Math.random() * cityEvents.length)
-        ];
+  add(`🌅 Good morning! Day ${nextDay} begins.`);
 
-      setActiveEvent(event);
-    }
-  };
+  if (
+    activeMission &&
+    missionDeadline !== null &&
+    nextDay > missionDeadline
+  ) {
+    add(
+      `⏰ Mission failed: ${activeMission.title}. The deadline has passed!`
+    );
+
+    setActiveMission(null);
+    setMissionStarted(false);
+    setMissionDeadline(null);
+    setMissionStartDay(null);
+
+    setRep((value) => Math.max(0, value - 2));
+  }
+
+  if (Math.random() < 0.6) {
+    const event =
+      cityEvents[
+        Math.floor(Math.random() * cityEvents.length)
+      ];
+
+    setActiveEvent(event);
+  }
+};
+
 
   const handleEventChoice = (choice: EventChoice) => {
     if (choice.money) {
@@ -380,11 +407,15 @@ const startMission = (mission: Mission) => {
   }
 
   setActiveMission(mission);
-  setMissionStarted(true);
+setMissionStarted(true);
 
-  add(`🎯 Mission accepted: ${mission.title}`);
+setMissionStartDay(day);
+setMissionDeadline(day + mission.timeLimit);
+
+add(
+  `🎯 Mission accepted: ${mission.title}. You have ${mission.timeLimit} in-game days to complete it!`
+);
 };
-
 const completeMission = () => {
   if (!activeMission) return;
 
@@ -412,7 +443,9 @@ const completeMission = () => {
   );
 
   setActiveMission(null);
-  setMissionStarted(false);
+setMissionStarted(false);
+setMissionDeadline(null);
+setMissionStartDay(null);
 };
   const talkToNpc = (
     name: string,
