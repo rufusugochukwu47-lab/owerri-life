@@ -34,10 +34,13 @@ type Mission = {
   timeLimit: number;
 };
   
+
 type Apartment = {
   name: string;
   rent: number;
   upgradeCost: number;
+  sleepEnergy: number;
+  happinessBonus: number;
 };
 
 const apartments: Apartment[] = [
@@ -45,18 +48,25 @@ const apartments: Apartment[] = [
     name: "🏠 Simple Room",
     rent: 2000,
     upgradeCost: 5000,
+    sleepEnergy: 75,
+    happinessBonus: 0,
   },
   {
     name: "🏢 Ikenegbu Apartment",
     rent: 4000,
     upgradeCost: 12000,
+    sleepEnergy: 90,
+    happinessBonus: 2,
   },
   {
     name: "🏙️ New Owerri Flat",
     rent: 7000,
     upgradeCost: 20000,
+    sleepEnergy: 100,
+    happinessBonus: 5,
   },
 ];
+
 
 const missions: Mission[] = [
   {
@@ -246,6 +256,7 @@ export default function App() {
   
 const [home, setHome] = useState<Apartment | null>(null);
 const [homeLevel, setHomeLevel] = useState(0);
+  const [rentWarning, setRentWarning] = useState(0);
 
   const [job, setJob] = useState(0);
 
@@ -397,31 +408,68 @@ const upgradeHome = () => {
 
   add(`🛋️ Home upgraded to level ${homeLevel + 1}! Happiness increased.`);
 };
+    
+const moveOut = () => {
+  if (!home) {
+    add("🏠 You don't have an apartment to move out of.");
+    return;
+  }
+
+  add(`📦 You moved out of ${home.name}. Choose a new apartment when you're ready.`);
+
+  setHome(null);
+  setHomeLevel(0);
+  setRentWarning(0);
+};
+
 
 const sleep = () => {
   const nextDay = day + 1;
 
   setDay(nextDay);
-  setEnergy(100);
+
+  setEnergy(home ? home.sleepEnergy : 100);
+
   setHunger((value) => Math.max(0, value - 10));
-  setHappy((value) => Math.min(100, value + 5));
+
+  setHappy((value) =>
+    Math.min(
+      100,
+      value + 5 + (home ? home.happinessBonus : 0) + homeLevel * 2
+    )
+  );
 
   add(`🌅 Good morning! Day ${nextDay} begins.`);
+
   
 if (home) {
   if (money >= home.rent) {
     setMoney((value) => value - home.rent);
+    setRentWarning(0);
 
     add(
       `🏠 Rent paid for ${home.name}: -₦${home.rent.toLocaleString()}`
     );
+  } else if (rentWarning === 0) {
+    setRentWarning(1);
+
+    add(
+      `⚠️ RENT WARNING! You couldn't afford ₦${home.rent.toLocaleString()} rent. Earn money before your next sleep!`
+    );
+  } else if (rentWarning === 1) {
+    setRentWarning(2);
+
+    add(
+      `🚨 FINAL RENT WARNING! Pay ₦${home.rent.toLocaleString()} before your next sleep or you'll lose your apartment!`
+    );
   } else {
     add(
-      `🚪 You couldn't afford rent for ${home.name}. You lost your apartment!`
+      `🚪 You've been evicted from ${home.name} because you couldn't pay rent!`
     );
 
     setHome(null);
     setHomeLevel(0);
+    setRentWarning(0);
   }
 }
 
@@ -452,6 +500,7 @@ if (home) {
     setActiveEvent(event);
   }
 };
+
 
 
   const handleEventChoice = (choice: EventChoice) => {
@@ -880,7 +929,21 @@ setMissionStartDay(null);
         {homeLevel >= 3
           ? "✨ Fully Upgraded"
           : "🛋️ Upgrade Home"}
-      </button>
+      </button> 
+      
+
+<button
+  className="primary"
+  onClick={moveOut}
+  style={{
+    width: "100%",
+    marginTop: "8px",
+  }}
+>
+  📦 Move Out
+</button>
+
+
     </>
   ) : (
     <>
