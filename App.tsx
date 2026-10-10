@@ -33,6 +33,31 @@ type Mission = {
   reputation: number;
   timeLimit: number;
 };
+  
+type Apartment = {
+  name: string;
+  rent: number;
+  upgradeCost: number;
+};
+
+const apartments: Apartment[] = [
+  {
+    name: "🏠 Simple Room",
+    rent: 2000,
+    upgradeCost: 5000,
+  },
+  {
+    name: "🏢 Ikenegbu Apartment",
+    rent: 4000,
+    upgradeCost: 12000,
+  },
+  {
+    name: "🏙️ New Owerri Flat",
+    rent: 7000,
+    upgradeCost: 20000,
+  },
+];
+
 const missions: Mission[] = [
   {
     title: "📦 Phone Delivery",
@@ -218,6 +243,10 @@ export default function App() {
   const [hunger, setHunger] = useState(75);
   const [day, setDay] = useState(1);
   const [place, setPlace] = useState("Ikenegbu");
+  
+const [home, setHome] = useState<Apartment | null>(null);
+const [homeLevel, setHomeLevel] = useState(0);
+
   const [job, setJob] = useState(0);
 
   const [log, setLog] = useState([
@@ -326,6 +355,49 @@ const [missionStartDay, setMissionStartDay] =
   };
 
   
+const rentApartment = (apartment: Apartment) => {
+  if (home) {
+    add("🏠 You already have an apartment. Move out before renting another.");
+    return;
+  }
+
+  if (money < apartment.rent) {
+    add(`💸 You need ₦${apartment.rent.toLocaleString()} to rent this apartment.`);
+    return;
+  }
+
+  setMoney((value) => value - apartment.rent);
+  setHome(apartment);
+  setHomeLevel(0);
+
+  add(`🏠 You rented ${apartment.name}. First day's rent: ₦${apartment.rent.toLocaleString()}.`);
+};
+
+const upgradeHome = () => {
+  if (!home) {
+    add("🏠 Rent an apartment before upgrading your home.");
+    return;
+  }
+
+  if (homeLevel >= 3) {
+    add("✨ Your apartment is fully upgraded!");
+    return;
+  }
+
+  const cost = home.upgradeCost * (homeLevel + 1);
+
+  if (money < cost) {
+    add(`💸 You need ₦${cost.toLocaleString()} for this upgrade.`);
+    return;
+  }
+
+  setMoney((value) => value - cost);
+  setHomeLevel((value) => value + 1);
+  setHappy((value) => Math.min(100, value + 8));
+
+  add(`🛋️ Home upgraded to level ${homeLevel + 1}! Happiness increased.`);
+};
+
 const sleep = () => {
   const nextDay = day + 1;
 
@@ -335,6 +407,24 @@ const sleep = () => {
   setHappy((value) => Math.min(100, value + 5));
 
   add(`🌅 Good morning! Day ${nextDay} begins.`);
+  
+if (home) {
+  if (money >= home.rent) {
+    setMoney((value) => value - home.rent);
+
+    add(
+      `🏠 Rent paid for ${home.name}: -₦${home.rent.toLocaleString()}`
+    );
+  } else {
+    add(
+      `🚪 You couldn't afford rent for ${home.name}. You lost your apartment!`
+    );
+
+    setHome(null);
+    setHomeLevel(0);
+  }
+}
+
 
   if (
     activeMission &&
@@ -765,7 +855,62 @@ setMissionStartDay(null);
               🚶 Travel costs <b>5 Energy</b>
             </p>
           </div>
-     
+           
+<div className="card">
+  <small>🏠 HOUSING</small>
+
+  {home ? (
+    <>
+      <h2>{home.name}</h2>
+
+      <p>💰 Daily rent: ₦{home.rent.toLocaleString()}</p>
+
+      <p>🛋️ Upgrade level: {homeLevel}/3</p>
+
+      <p>
+        Next upgrade cost: ₦
+        {(home.upgradeCost * (homeLevel + 1)).toLocaleString()}
+      </p>
+
+      <button
+        className="primary"
+        onClick={upgradeHome}
+        disabled={homeLevel >= 3}
+      >
+        {homeLevel >= 3
+          ? "✨ Fully Upgraded"
+          : "🛋️ Upgrade Home"}
+      </button>
+    </>
+  ) : (
+    <>
+      <p>Choose an apartment to rent in Owerri.</p>
+
+      {apartments.map((apartment) => (
+        <div key={apartment.name}>
+          <p>
+            <b>{apartment.name}</b>
+          </p>
+
+          <p>
+            Daily rent: ₦{apartment.rent.toLocaleString()}
+          </p>
+
+          <button
+            onClick={() => rentApartment(apartment)}
+            style={{
+              width: "100%",
+              marginTop: "8px",
+            }}
+          >
+            🏠 Rent Apartment
+          </button>
+        </div>
+      ))}
+    </>
+  )}
+</div>
+
           {nearbyNpcs.length > 0 && (
             <div className="card">
               <small>PEOPLE NEARBY</small>
