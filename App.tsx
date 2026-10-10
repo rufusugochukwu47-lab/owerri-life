@@ -802,7 +802,12 @@ setMissionStartDay(null);
                 <p>
                   📍 Deliver to: <b>{activeMission.to}</b>
                 </p>
-
+                    
+                <p>
+                  ⏳ Deadline: {missionDeadline !== null
+                   ? `${missionDeadline - day} in-game days remaining`
+                 : `${activeMission.timeLimit} in-game days`}
+              </p>
                 <p>
                   💰 Reward: ₦{activeMission.reward.toLocaleString()}
                 </p>
